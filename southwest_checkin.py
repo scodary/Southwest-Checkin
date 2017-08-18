@@ -6,6 +6,7 @@ from datetime import datetime
 from datetime import timedelta
 from time import sleep
 
+
 parser = OptionParser()
 parser.add_option("-c", "--confirmation_num", action="store", dest="conf_num",
                   help="confirmation number for flight", type="string")
@@ -17,6 +18,16 @@ parser.add_option("-t", "--time", action="store", dest="time",
 				  help="time to start checkin attempts", type="string")
 
 (options, args) = parser.parse_args()
+
+
+# busy wait until it is close to the desired time                                                                                                                         
+des_time = datetime.strptime(options.time, '%b %d %Y %I:%M%p')
+des_time_minus_five_mins = des_time - timedelta(minutes=5)
+cur_time = datetime.now()
+while des_time_minus_five_mins > cur_time:
+        print str(des_time_minus_five_mins), ' =/= ', str(cur_time)
+        sleep(60)
+        cur_time = datetime.now()
 
 # Create a new instance of the Chrome driver
 driver = webdriver.Chrome()
